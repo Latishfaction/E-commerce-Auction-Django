@@ -1,0 +1,46 @@
+Django + HTML
+    ✅ Login Page
+    ⌛ (need some editing )Register Page
+
+    📦Database Models
+        ✅ User
+        ✅ Category
+        ✅ Listing
+        ✅ Comment
+        ✅ Bid
+        ✅ AuctionListing
+        ✅ Watchlist
+    
+    ✅ Active Listing
+    ✅ View Listing
+    ✅ Bidding System
+        ✅enable/disable bid
+            ✅OPTIMIZATIONS
+                ✅ if the entry is already existed then add item to it instead of creating new entry 
+                ✅ While disabling the bid, check for any bid of the item, if there is no bid then delete the bid. 
+        ✅ Can't bid less than previous bid / price
+        ✅ After Bid is disabled, show highest bidder name, also alert the user that he/she has won the bid
+    ✅ Create Listing
+    ✅ My Listing
+    ✅ Comment on Listing
+    ✅ Watchlist
+        ✅ Add to Watch list 
+            ✅ OPTIMIZATIONS
+                ✅ if the entry is already existed then add item to it instead of creating new entry 
+        ✅ Remove from Watchlist 
+        ✅ Show Watchlists page 
+    ✅ Categories Tab
+        ✅ Active Auctions (of specific category)
+        ✅ Also Shows Empty messages
+
+⌛ Design of Website
+
+
+Users Info
+
+Username    Password
+latish      123
+mili        123
+ram         123
+mohini      123
+raja        raja
