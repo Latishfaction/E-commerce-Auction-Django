@@ -6,8 +6,10 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
-from .models import User, Bid, Listing, Category, Watchlist, Comment
-
+from .models import User, Bid, Listing, Category, Watchlist, Comment,OrderHistory
+import razorpay
+from commerce import settings
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     activeListing = Listing.objects.all().filter(isActive=True)
@@ -348,3 +350,67 @@ def show_comments(request, listing_id):
     except:
         item = []
     return reversed(item)
+
+
+#payment
+def payment_form(request,product_id):
+    if request.method=="POST":
+        # get form details and store it in order histroy
+        product_info = Bid.objects.get(id=product_id)
+        address = request.POST.get("address")
+        landmark =request.POST.get("landmark")
+        zipcode = request.POST.get("zipcode")
+        contact = request.POST.get("contact") 
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        response_payment = client.order.create(dict(amount=int(product_info.bid_amount)*100,currency="INR"))
+        print(response_payment)
+        order_id = response_payment['id']
+        order_status = response_payment['status']
+
+        if order_status =='created':
+            try:
+                order = OrderHistory.objects.get(order_id=order_id)
+            except:
+                order = OrderHistory()
+                order.order_id = order_id
+                order.product_info = product_info
+                order.address = address
+                order.landmark = landmark
+                order.zipcode = zipcode
+                order.contact = contact
+                order.save()
+        return render(request, "auctions/payment_form.html",{
+            "product":product_info,
+            "payment":response_payment,
+        })
+
+    product_info = Bid.objects.get(id=product_id)
+    return render(request, "auctions/payment_form.html",{
+            "product":product_info,
+        })
+
+@csrf_exempt
+def payment_status(request):
+    response = request.POST
+    params_dict = {
+        'razorpay_order_id':response['razorpay_order_id'],
+        'razorpay_payment_id':response['razorpay_payment_id'],
+        'razorpay_signature':response['razorpay_signature']
+    }
+
+    # client instance
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    try:
+        status = client.utility.verify_payment_signature(params_dict)
+        order = OrderHistory.objects.get(order_id=response['razorpay_order_id'])
+        print("ORDER : ",order)
+        order.payment_id = response['razorpay_payment_id']
+        order.payment = True
+        order.save()
+        return render(request, "auctions/payment_success.html",{
+            'status':True,
+        })
+    except:
+        return render(request, "auctions/payment_success.html",{
+            'status':False,
+        })

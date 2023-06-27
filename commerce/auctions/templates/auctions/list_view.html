@@ -118,7 +118,8 @@
             {% elif bid_info.isFinished %}
             {% if bid_info.bidder.username == request.user.username %}
             <div class="bid_direct">
-                <h4>You won this Bid</h4>
+                <h4 class="text-center">You won this Bid</h4>
+                <a href="{% url 'payment_form' bid_info.id  %}" class="btn btn-primary">Make Payment</a>
             </div>
 
             {% else %}

@@ -70,3 +70,18 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.user} has {len(self.items.all())} items"
+
+class OrderHistory(models.Model):
+    order_id = models.CharField(max_length=100,default="default")
+    payment_id = models.CharField(max_length=100,default="default")
+    product_info = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name="order_product")
+    address = models.CharField(max_length=300)
+    landmark = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=6)
+    contact = models.BigIntegerField()
+    payment = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.product_info.item.title} sold to {self.product_info.bidder.username}"
+
+

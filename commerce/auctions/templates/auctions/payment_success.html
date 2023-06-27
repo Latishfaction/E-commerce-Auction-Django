@@ -1,0 +1,25 @@
+{% extends 'auctions/layout.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+<div class="container-fluid">
+    {% if status %}
+        <div class="flex-format">
+            <div class="text-center">
+                <img src="https://icon-library.com/images/check-icon/check-icon-10.jpg" class="img-fluid" alt=""
+                    width="15%">
+            </div>
+            <h3>Payment completed successfully</h3>
+        </div>
+    {% else %}
+        <div class="flex-format">
+            <div class="text-center">
+                <img src="https://freepngimg.com/thumb/fail_stamp/2-2-fail-stamp-png-clipart.png" class="img-fluid" alt=""
+                    width="15%">
+            </div>
+            <h3>Your Payment is unsuccessfull</h3>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

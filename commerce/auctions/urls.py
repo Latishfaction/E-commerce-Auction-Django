@@ -43,4 +43,6 @@ urlpatterns = [
         views.show_comments,
         name="show_comments",
     ),
+    path("payment/<int:product_id>",views.payment_form,name="payment_form"),
+    path("payment_status/",views.payment_status,name="payment_status"),
 ]
